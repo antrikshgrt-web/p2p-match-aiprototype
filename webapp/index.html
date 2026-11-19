@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P2P Match AI — Invoice Verification Queue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">P2P</span>
+    <div class="brand-text">
+      <div class="brand-name">Match AI</div>
+      <div class="brand-sub">Invoice Verification &amp; Exception Triage</div>
+    </div>
+  </div>
+  <nav class="tabs">
+    <button class="tab active" data-view="queue">Queue</button>
+    <button class="tab" data-view="submit">New Invoice</button>
+    <button class="tab" data-view="audit">Audit Trail</button>
+  </nav>
+  <div class="topbar-meta">
+    <span id="queueCount" class="pill">0 pending</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- QUEUE VIEW -->
+  <section id="view-queue" class="view active">
+    <div class="queue-layout">
+      <div class="queue-list-pane">
+        <div class="pane-heading">
+          <h2>Invoice queue</h2>
+          <div class="filter-row">
+            <button class="filter active" data-filter="ALL">All</button>
+            <button class="filter" data-filter="EXCEPTION">Exceptions</button>
+            <button class="filter" data-filter="CLEAN_MATCH">Clean matches</button>
+            <button class="filter" data-filter="RESOLVED">Resolved</button>
+          </div>
+        </div>
+        <div id="invoiceList" class="invoice-list"></div>
+      </div>
+
+      <div class="queue-detail-pane" id="detailPane">
+        <div class="empty-state">
+          <p>Select an invoice from the queue to review the AI's three-way match result.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUBMIT VIEW -->
+  <section id="view-submit" class="view">
+    <div class="form-card">
+      <h2>Submit a vendor invoice</h2>
+      <p class="form-hint">Enter invoice fields as if extracted from a scanned/photographed invoice. The AI agent will retrieve the matching PO/GRN and run the three-way match automatically.</p>
+      <form id="invoiceForm">
+        <div class="form-grid">
+          <label>Vendor name
+            <input type="text" name="vendor" required placeholder="e.g. ABC Textiles Pvt Ltd">
+          </label>
+          <label>PO reference
+            <input type="text" name="poReference" required placeholder="e.g. 4500123456">
+          </label>
+          <label>Quantity
+            <input type="number" step="0.01" name="quantity" required placeholder="1000">
+          </label>
+          <label>Unit of measure
+            <input type="text" name="uom" required placeholder="KG / PCS / BOX">
+          </label>
+          <label>Unit price
+            <input type="number" step="0.01" name="unitPrice" required placeholder="145.00">
+          </label>
+          <label>GST number (on invoice)
+            <input type="text" name="gstNumber" required placeholder="09ABCPT1234A1Z5">
+          </label>
+          <label>Currency
+            <input type="text" name="currency" value="INR">
+          </label>
+          <label>Scan quality
+            <select name="scanQuality">
+              <option value="GOOD">Good — clearly legible</option>
+              <option value="POOR">Poor — blurred / low-confidence</option>
+            </select>
+          </label>
+        </div>
+        <button type="submit" class="btn-primary">Run AI verification</button>
+      </form>
+      <p class="form-note">Reference PO numbers seeded in this prototype: 4500123456, 4500123457, 4500123458, 4500123459, 4500123460, 4500123461.</p>
+    </div>
+  </section>
+
+  <!-- AUDIT VIEW -->
+  <section id="view-audit" class="view">
+    <div class="audit-card">
+      <h2>Audit trail</h2>
+      <p class="form-hint">Every AI recommendation and every human decision is logged here — nothing is posted to SAP without a recorded human action.</p>
+      <table class="audit-table">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Invoice</th>
+            <th>Event</th>
+            <th>AI status</th>
+            <th>Human decision</th>
+            <th>Reason</th>
+          </tr>
+        </thead>
+        <tbody id="auditBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  Prototype for academic demonstration only · synthetic data · no live SAP connection · human approval required before every posting
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
